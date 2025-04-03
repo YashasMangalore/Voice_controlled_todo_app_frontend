@@ -57,20 +57,45 @@ async function processCommand(command) {
             urgency: aiResponse.urgency,
             dateTime: aiResponse.dateTime,
         }
-        const response=await fetch("http://localhost:8080/api/task/add",{
-            method:'POST',
-            headers:{
-                "Content-type":"application/json",
-                "Accept":"application/json"
-            },
-            body:JSON.stringify(requestBody)
-        })
-        if(!response.ok){
-            console.log("request unsuccessful")
-            throw new Error(`Http error with status code: ${response.status}`)
+
+        document.getElementById('operation').textContent=aiResponse.operation;
+        document.getElementById('task').textContent=aiResponse.task;
+        document.getElementById('urgency').textContent=aiResponse.urgency;
+        document.getElementById('dateTime').textContent=aiResponse.dateTime?aiResponse.dateTime:'';
+        const confirmationArea=document.getElementById('confirmation-area')
+        confirmationArea.innerHTML=`
+        <div class="confirmation-button">
+            <p>Is this correct?</p>
+            <button class="confirmation-btn" onclick="addTask()">Yes</button>
+            <button class="confirmation-btn" onclick="clearTaskOutput()">No</button>
+        </div>
+        `;
+
+        window.confirmTask=async (isCorrect)=>{
+            if(isCorrect){
+                clearTaskOutput()
+                const response=await fetch("http://localhost:8080/api/task/add",{
+                    method:'POST',
+                    headers:{
+                        "Content-type":"application/json",
+                        "Accept":"application/json"
+                    },
+                    body:JSON.stringify(requestBody)
+                })
+                if(!response.ok){
+                    console.log("request unsuccessful")
+                    throw new Error(`Http error with status code: ${response.status}`)
+                }
+                const responseData=await response.json 
+                return responseData;
+            }
+            else{
+                console.log("Wrong input");
+                clearTaskOutput();
+                startListening();
+            }
         }
-        const responseData=await response.json 
-        return responseData;
+        
     } catch (error) {
         console.error(error);
         return null;
