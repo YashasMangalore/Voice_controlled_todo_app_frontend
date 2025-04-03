@@ -55,7 +55,6 @@ h2{
     max-width: 800px;
 }
 
-
 .voice-btn:hover,
 .confirm-btn:hover{
     background: #83086a;
@@ -69,5 +68,6 @@ h2{
     border-radius: 25px;
     margin: 0 5px;
     transition: all 0.3s ease;
-    
 }
+
+
