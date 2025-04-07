@@ -44,6 +44,6 @@ export async function main(userCommand) {
   // Remove Markdown-style triple backticks if they exist
   let cleanedContent = rawContent.replace(/```json|```/g, "").trim();
   console.log("Cleaned AI Response:", cleanedContent);
-
+  
   return JSON.parse(cleanedContent);
 }

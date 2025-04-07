@@ -70,7 +70,7 @@ async function processCommand(command) {
             <button class="confirmation-btn" onclick="clearTaskOutput()">No</button>
         </div>
         `;
-
+        
         window.confirmTask=async (isCorrect)=>{
             if(isCorrect){
                 clearTaskOutput()
