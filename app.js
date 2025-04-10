@@ -1,11 +1,28 @@
 import {main as processWithAi} from "./openAi-integration.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    const userData=localStorage.getItem('userData')
+    if(!userData){
+        window.location.replace('login.html')
+        return;
+    }
+
     const voiceButton = document.querySelector(".voice-btn");
     if (voiceButton) {
         voiceButton.addEventListener("click", startListening);
     }
+
+    clearTaskOutput();
 })
+
+function setDataToLocalStorage(userId){
+    localStorage.setItem('userData',userId)
+}
+
+function getDataFromLocalStorage(){
+    const userData=localStorage.getItem('userData')
+    return userData;
+}
 
 function clearTaskOutput(){
     const taskInfo=document.querySelector('.task-information');
