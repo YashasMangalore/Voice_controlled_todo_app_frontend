@@ -1,5 +1,12 @@
 import {main as processWithAi} from "./openAi-integration.js";
 
+(function checkAuth(){
+    const userData=localStorage.getItem('userData')
+    if(!userData){
+        window.location.replace('login.html')
+        return;
+    }
+})();
 document.addEventListener('DOMContentLoaded', () => {
     const userData=localStorage.getItem('userData')
     if(!userData){
@@ -74,6 +81,92 @@ function startListening() {
     }
 }
 
+function getUrgencyColor(color) {
+    if(color==null){
+        return;
+    }
+    switch(color.toLowerCase()){
+        case 'high':
+            return "#FF0000";
+        case 'medium':
+            return '#FFA500';
+        case 'low':
+            return "#008000";
+        default:
+            return '#808080';
+        
+    }
+}
+function updateTaskList(){
+    const todoList=document.getElementById("todo-list");
+    todoList.innerHTML=''
+    const taskStore=new Map();
+    getTasksFromDb().then((tasks)=>{
+        if(Array.isArray(tasks)){
+            taskStore.forEach((taskData,key)=>{
+                const listItem=document.createElement("div");
+                listItem.classList.add("todo-item");
+
+                const statusIndicator=document.createElement("div");
+                statusIndicator.classList.add("status-indicator");
+                statusIndicator.style.backgroundColor=getUrgencyColor(taskData.urgency);
+
+                const taskContent=document.createElement('div');
+                taskContent.classList.add('task-content');
+
+                const taskTitle =document.createElement('div');
+                taskTitle.classList.add('task-title');
+                taskTitle.ATTRIBUTE_NODE.innerHTML=`<span class="operation-badge' style='background-color:
+                ${getUrgencyColor(taskData.urgency)}'>${taskData.operation}</span>
+                <span class="task-name">${taskData.task}</span>
+                `
+
+                const taskDetails=document.createElement('div')
+                taskDetails.classList.add('task-details-line');
+                taskDetails.innerHTML=`<span class="urgency-badge' style='background-color:
+                ${getUrgencyColor(taskData.urgency)}'>${taskData.task}</span>
+                ${taskData.dateTime?<span class='dateTime'>${taskData.dateTime}</span>:''}
+                `
+
+                taskContent.appendChild(taskTitle);
+                taskContent.appendChild(taskDetails);
+                const completeButton=document.createElement('button');
+                completeButton.classList.add('complete-btn');
+                completeButton.innerHTML=''
+                completeButton.title='Mark as finished'
+                completeButton.onclick=()=>{
+                    try {
+                        const response=fetch(`http://localhost:8080/api/task/delete/${taskData.id}`,{
+                            method:'DELETE',
+                            headers:{
+                                "Content-Type":"application/json",
+                                "Accept":"application/json"
+                            }
+                        })
+
+                        if(!response.ok){
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                    } catch (error) {
+                        console.error("Error deleting task:", error);
+                        alert("Error deleting task. Please try again.");
+                    }
+                }
+                listItem.appendChild(statusIndicator);
+                listItem.appendChild(taskContent);
+                listItem.appendChild(completeButton);
+
+                todoList.appendChild(listItem);
+            });
+        }
+        else{
+            console.error("Invalid task data format:", tasks);
+        }
+    }).catch((error)=>{
+        console.error("Error fetching tasks:", error);
+    })
+}
+
 async function processCommand(command) {
     try {
         const aiResponse=await processWithAi(command)
@@ -86,6 +179,7 @@ async function processCommand(command) {
             task: aiResponse.task,
             urgency: aiResponse.urgency,
             dateTime: aiResponse.dateTime,
+            userId:userData.id
         }
 
         document.getElementById('operation').textContent=aiResponse.operation;

@@ -88,7 +88,7 @@ async function generateJwt(email,password,role){
         return sJWT;
     } catch (error) {
         console.error("Error decoding Jwt: " + error)
-        return null;
+        throw error;
     }
     
 }
@@ -105,4 +105,35 @@ function decodeJwt(token){
 
 function signUsingRSA(data,key){
     return btoa(data+"_signed_with_RSA");
+}
+
+function showErrorAuth(error,statusCode){
+    let errorMessageCode;
+    switch(statusCode){
+        case 400:
+            errorMessageCode="Bad Request";
+            break;
+        case 401:
+            errorMessageCode="Unauthorized";
+            break;
+        case 403:
+            errorMessageCode="Forbidden";
+            break;
+        case 404:
+            errorMessageCode="Not Found";
+            break;
+        case 500:
+            errorMessageCode="Internal Server Error";
+            break;
+        default:
+            errorMessageCode="Unknown Error";
+    }
+    const variable=document.getElementById('error-message')
+    if(variable){
+        variable.textContent=errorMessageCode;
+        variable.style.display='block';
+        setTimeout(()=>{
+            variable.style.display='none';
+        },3000);
+    }
 }
