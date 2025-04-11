@@ -13,15 +13,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     clearTaskOutput();
+    updateTaskList();
+
+    const logoutBtn=document.getElementById('logoutBtn')
+    if(logoutBtn){
+        logoutBtn.addEventListener('click',()=>{
+            localStorage.removeItem('userData')
+            window.location.replace('login.html')
+        })
+    }
 })
 
 function setDataToLocalStorage(userId){
     localStorage.setItem('userData',userId)
 }
 
-function getDataFromLocalStorage(){
+function getUserData(){
     const userData=localStorage.getItem('userData')
-    return userData;
+    return userData?JSON.parse(userData):null;
 }
 
 function clearTaskOutput(){
@@ -68,6 +77,10 @@ function startListening() {
 async function processCommand(command) {
     try {
         const aiResponse=await processWithAi(command)
+        const userData=getUserData()
+        if(!userData){
+            throw new Error("User data not found in local storage.");
+        }
         const requestBody={
             operation: aiResponse.operation,
             task: aiResponse.task,
@@ -116,5 +129,33 @@ async function processCommand(command) {
     } catch (error) {
         console.error(error);
         return null;
+    }
+}
+
+function getUserData(){
+    const userData=localStorage.getItem('userData')
+    return userData?JSON.parse(userData):null;
+}
+async function getTasksFromDb(userId) {
+    try {
+        const userData = getUserData();
+        if (!userData) {
+            throw new Error("User data not found in local storage.");
+        }
+        const response = await fetch(`http://localhost:8080/api/task/find/userId=${userData.userId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching tasks:", error); 
+        return new Map(); // Return an empty map in case of error
     }
 }

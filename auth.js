@@ -22,6 +22,8 @@ toggleAuthLink.addEventListener('click', (e)=>{
     "Already have an account? Login";
 });
 
+
+
 function setDataToLocalStorage(user){
     const userDataJsonString=JSON.stringify(user);
     localStorage.setItem('userData',userDataJsonString)
@@ -47,7 +49,7 @@ authform.addEventListener('submit',async (e)=>{
             console.log(errorData);
         }
         const data=await response.json();
-        setDataToLocalStorage(data)
+        localStorage.setItem('userData', JSON.stringify(data)); // Store user data in local storage
         window.location.href='index.html';
 
     } catch (error) {
@@ -63,23 +65,27 @@ function showError(message){
     },3000)
 }
 
-function generateJwt(email,password){
+async function generateJwt(email,password,role){
+    const header={
+        algorithm:"RS256",
+        typ:'JWT'
+    }
     const payload={
-        "email":email,
-        "password":password,
-        "iat":Math.floor(Date.now()/1000),
-        "exp":Math.floor(Date.now()/1000)+(60*60)
+        email:email,
+        password:password,
+        role:role,
+        iat:Math.floor(Date.now()/1000),
+        exp:Math.floor(Date.now()/1000)+(60*60)
     }
 
-    const publicKey=`------BEGIN PUBLIC KEY------
+    const privateKey=`------BEGIN PUBLIC KEY------
     qwjcfhgwiuf9eufuiofghjo
     ------END PUBLIC KEY------`
     try {
-        const token=jwt.sign(payload,PublicKeyCredential,{
-            "algorithm":"RS256",
-            "keyId":"1"
-        });
-        return token;
+        const sheader=JSON.stringify(header);
+        const spayload=JSON.stringify(payload);
+        const sJWT=KJUR.jws.JWS.sign("RS256",sheader,spayload,privateKey);
+        return sJWT;
     } catch (error) {
         console.error("Error decoding Jwt: " + error)
         return null;

@@ -1,6 +1,6 @@
 const config = {
     google: {
-      clientID: "Google_Id",
+      clientID: "277774640910-e9f9plpr6q38ar10fo23t8cppkp413c7.apps.googleusercontent.com",
       redirectedUri: "http://localhost/auth/google/callback.html"
     },
     facebook: {

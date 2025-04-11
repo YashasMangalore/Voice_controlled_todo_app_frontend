@@ -19,14 +19,14 @@ export async function main(userCommand) {
         1. Operation (Add/Delete/Update)
         2. Task description
         3. Urgency (High/Medium/Low)
-        4. Date and time (if mentioned)
+        4. Date and time (if mentioned in dd//mm//yyyy format)
 
         Respond in JSON format like:
         {
             "operation": "...",
             "task": "...",
             "urgency": "...",
-            "dateandtime": "..." (or null if not specified)
+            "dateandtime": "..."
         }
 
         Do NOT wrap the JSON response in Markdown (\`\`\`json ... \`\`\`).`,
