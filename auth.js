@@ -75,7 +75,7 @@ function generateJwt(email,password){
     qwjcfhgwiuf9eufuiofghjo
     ------END PUBLIC KEY------`
     try {
-        const token=jwt.sign(payload,PublicKeyCredential,{{
+        const token=jwt.sign(payload,PublicKeyCredential,{
             "algorithm":"RS256",
             "keyId":"1"
         });
@@ -85,9 +85,6 @@ function generateJwt(email,password){
         return null;
     }
     
-    const encodedHeader=btoa(JSON.stringify(header))
-    const encodedPayload=btoa(JSON.stringify(payload))
-    const signature=signUsingRSA(encodedHeader+"."+encodedPayload,key)
 }
 
 function decodeJwt(token){
