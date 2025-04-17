@@ -109,8 +109,24 @@ h2{
     padding: 8px 12px;
     border-radius: 4px;
     font-size: 14px;
+<<<<<<< HEAD
+=======
+    border: 3px solid #ccc;
+    cursor: pointer;
+    background-color: white;
+>>>>>>> c022d7d (Updated with new changes)
 }
 .task-filter select:focus{
     outline: none;
     border-color: blue;
+<<<<<<< HEAD
+=======
+}
+
+.noTaskMessage{
+    text-align: center;
+    padding: 20px;
+    color: grey;
+    font-style: italic;
+>>>>>>> c022d7d (Updated with new changes)
 }
