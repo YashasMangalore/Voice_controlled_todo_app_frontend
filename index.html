@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- utf-8 to render on all;  viewport and width for all devices -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoicevTo-Do App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div>
+                <h1>Voice To-Do list</h1>
+                <p>Organise your tasks</p>
+            </div>
+            <button class="logout-btn" id="logoutBtn">LogOut</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="todo-container">
+            <h2>Add a task</h2>
+            <div class="task-filter">
+            <select id="dateFilter" onchange="filterTasks()">
+                <option value="all">All Tasks</option>
+                <option value="7">Next 7 days</option>
+                <option value="15">Next 15 days</option>
+                <option value="30">Next 30 days</option>
+            </select>
+            </div>
+            <button class="voice-btn">+</button>
+            <div id="todo-list"></div>
+        </section>
+    </main>
+        
+    <section class="task-details">
+        <h2>Tasks</h2>
+        <div id="task-output">
+            <div class="task-information">
+                <p><strong>Operation: Add</strong><span id="operation"></span></p>
+                <p><strong>Task</strong><span id="task"></span></p>
+                <p><strong>Urgency</strong><span id="urgency"></span></p>
+                <p><strong>Date/Time</strong><span id="dateTime"></span></p>
+            </div>
+        </div>
+        <div id="confirmation-area"></div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Voice To-Do App</p>
+        <a href="#">Privacy Policy</a>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
